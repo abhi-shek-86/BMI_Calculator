@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional BMI Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        .bmi-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .bmi-table th, .bmi-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .bmi-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .bmi-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary-color);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-color);
+        }
+
+        .modal-result {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-description {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .note {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Body Mass Index Calculator</h1>
+            <p>Assess your health with a simple calculation</p>
+        </div>
+
+        <table class="bmi-table">
+            <thead>
+                <tr>
+                    <th>BMI Range</th>
+                    <th>Weight Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Less than 18.5</td>
+                    <td>Underweight</td>
+                </tr>
+                <tr>
+                    <td>18.5 to 24.9</td>
+                    <td>Normal weight</td>
+                </tr>
+                <tr>
+                    <td>25.0 to 29.9</td>
+                    <td>Overweight</td>
+                </tr>
+                <tr>
+                    <td>30.0 and above</td>
+                    <td>Obese</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form class="bmi-form" action="/" method="post" id="bmiForm">
+            <div class="form-group">
+                <label for="weight">Weight (kg)</label>
+                <input type="text" id="weight" name="weight" class="form-control" 
+                       placeholder="Enter your weight" oninput="validateInput(event)" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Height (cm)</label>
+                <input type="text" id="height" name="height" class="form-control" 
+                       placeholder="Enter your height" oninput="validateInput(event)" required>
+            </div>
+            <button type="submit" class="btn">Calculate BMI</button>
+        </form>
+
+        <div id="bmiModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+                <div class="modal-result" id="modalResult"></div>
+                <div class="modal-description" id="modalDescription"></div>
+            </div>
+        </div>
+
+        <p class="note">
+            Note: BMI is a general indicator. Individual health varies, so consult a healthcare professional for personalized advice.
+        </p>
+    </div>
+
+    <script>
+        function validateInput(event) {
+            const input = event.target.value;
+            event.target.value = input.replace(/[^0-9.]/g, '');
+        }
+
+        {% if bmi %}
+        document.addEventListener('DOMContentLoaded', function() {
+            openModal("{{ bmi }}");
+        });
+        {% endif %}
+
+        function openModal(result) {
+            const modal = document.getElementById('bmiModal');
+            const modalResult = document.getElementById('modalResult');
+            const modalDescription = document.getElementById('modalDescription');
+            
+            // Split the result into main result and description
+            const parts = result.split('(');
+            modalResult.textContent = parts[0].trim();
+            modalDescription.textContent = parts.length > 1 ? '(' + parts[1] : '';
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('bmiModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bmiModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
